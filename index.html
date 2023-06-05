@@ -18,11 +18,27 @@ for (let path of files) {
   collections[collection][group].push(path);
 }
 
+let button = document.body.appendChild(document.createElement('button'));
+button.textContent = 'Show rows';
+button.addEventListener('click', e => {
+  if (table.className == 'bycolumns') {
+    table.className = 'byrows';
+    button.textContent = 'Show columns';
+  } else {
+    table.className = 'bycolumns';
+    button.textContent = 'Show rows';
+  }
+  displayCollection();
+});
+
+let currentcollection = null;
+
 for (let collection in collections) {
   let button = document.body.appendChild(document.createElement('button'));
   button.textContent = collection;
   button.addEventListener('click', e => {
-    displayCollection(collection);
+    currentcollection = collection;
+    displayCollection();
     for (let otherbutton of document.getElementsByTagName('button'))
       otherbutton.disabled = false;
     button.disabled = true;
@@ -30,11 +46,16 @@ for (let collection in collections) {
 }
 
 let table = document.body.appendChild(document.createElement('table'));
-let tr = table.appendChild(document.createElement('tr'));
+table.className = 'bycolumns';
 
-function displayCollection(collection) {
-  let groups = collections[collection];
-  tr.textContent = '';
+function displayCollection() {
+  if (!currentcollection)
+    return;
+  let groups = collections[currentcollection];
+  table.textContent = '';
+  let tr;
+  if (table.className == 'bycolumns')
+    tr = table.appendChild(document.createElement('tr'));
   let mode = 0;
   let selected;
   let entries = Object.entries(groups);
@@ -48,6 +69,8 @@ function displayCollection(collection) {
     groups[`Group ${entries.length}`] = [];
   entries = Object.entries(groups);
   for (let [group, images] of entries) {
+    if (table.className == 'byrows')
+      tr = table.appendChild(document.createElement('tr'));
     let td = tr.appendChild(document.createElement('td'));
     td.title = group;
     for (let i = 0; i < 30; i++) {
@@ -79,24 +102,35 @@ function displayCollection(collection) {
       let target = groups[td.title];
       target.unshift(fname);
 
-      displayCollection(collection);
+      displayCollection();
     });
   }
 }
 </script>
 
 <style>
-table {
+table.bycolumns {
   table-layout: fixed;
   width: 100%;
 }
 
-td {
+table.bycolumns td {
   border: 1px solid black;
   vertical-align: top;
 }
 
-img {
+table.bycolumns img {
   max-width: 50%;
+}
+
+table.byrows td {
+  border: 1px solid black;
+  height: 20vh;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+table.byrows img {
+  height: 20vh;
 }
 </style>
