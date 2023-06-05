@@ -71,9 +71,14 @@ function displayCollection(collection) {
       mode = 0;
       let [group, fname] = selected;
       //fetch('...') -- move selected to td.title on server
-      let i = groups[group].indexOf(fname);
-      groups[group].splice(i, 1);
-      groups[td.title].unshift(fname);
+
+      let source = groups[group];
+      let i = source.indexOf(fname);
+      source.splice(i, 1);
+
+      let target = groups[td.title];
+      target.unshift(fname);
+
       displayCollection(collection);
     });
   }
