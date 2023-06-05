@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<script type="module">
+let files = await fetch('/files').then(r => r.json());
+let collections = {};
+for (let path of files) {
+  let parts = path.split('/');
+  let collection = parts[1];
+  if (!collections[collection])
+    collections[collection] = {};
+  let group;
+  if (parts.length > 3)
+    group = parts[2];
+  else
+    group = 'all';
+  if (!collections[collection][group])
+    collections[collection][group] = [];
+  collections[collection][group].push(path);
+}
+
+for (let collection in collections) {
+  let button = document.body.appendChild(document.createElement('button'));
+  button.textContent = collection;
+  button.addEventListener('click', e => {
+    displayCollection(collection);
+    for (let otherbutton of document.getElementsByTagName('button'))
+      otherbutton.disabled = false;
+    button.disabled = true;
+  });
+}
+
+let table = document.body.appendChild(document.createElement('table'));
+let tr = table.appendChild(document.createElement('tr'));
+
+function displayCollection(collection) {
+  let groups = collections[collection];
+  tr.textContent = '';
+  let mode = 0;
+  let selected;
+  let entries = Object.entries(groups);
+  let foundempty = false;
+  for (let [group, images] of entries)
+    if (images.length == 0) {
+      foundempty = true;
+      break;
+    }
+  if (!foundempty)
+    groups[`Group ${entries.length}`] = [];
+  entries = Object.entries(groups);
+  for (let [group, images] of entries) {
+    let td = tr.appendChild(document.createElement('td'));
+    td.title = group;
+    for (let i = 0; i < 30; i++) {
+      if (i >= images.length)
+        break;
+      let img = td.appendChild(document.createElement('img'));
+      img.src = images[i];
+      img.addEventListener('click', e => {
+        console.log('img.click', img);
+        if (mode != 0)
+          return;
+        mode = 1;
+        selected = [group, images[i]];
+        e.stopPropagation();
+      });
+    }
+    td.addEventListener('click', e => {
+      console.log('td.click', td);
+      if (mode != 1)
+        return;
+      mode = 0;
+      let [group, fname] = selected;
+      //fetch('...') -- move selected to td.title on server
+      let i = groups[group].indexOf(fname);
+      groups[group].splice(i, 1);
+      groups[td.title].unshift(fname);
+      displayCollection(collection);
+    });
+  }
+}
+</script>
+
+<style>
+table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+td {
+  border: 1px solid black;
+  vertical-align: top;
+}
+
+img {
+  max-width: 50%;
+}
+</style>
