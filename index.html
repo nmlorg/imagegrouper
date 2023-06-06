@@ -2,24 +2,17 @@
 
 <script type="module">
 let files = await fetch('/files').then(r => r.json());
-let collections = {};
-for (let path of files) {
-  let parts = path.split('/');
-  let collection = parts[1];
-  if (!collections[collection])
-    collections[collection] = {};
-  let group;
-  if (parts.length > 3)
-    group = parts[2];
-  else
-    group = 'all';
-  if (!collections[collection][group])
-    collections[collection][group] = [];
-  collections[collection][group].push(path);
+let groups = {};
+for (let path of files) {  // path = 'path/to/filename.jpg'
+  let parts = path.split('/');  // parts = ['path', 'to', 'filename.jpg']
+  parts.pop();  // parts = ['path', 'to']
+  let group = parts.join('/');  // group = 'path/to'
+  if (!groups[group])
+    groups[group] = [];
+  groups[group].push(path);
 }
 
 let button = document.body.appendChild(document.createElement('button'));
-button.textContent = 'Show rows';
 button.addEventListener('click', e => {
   if (table.className == 'bycolumns') {
     table.className = 'byrows';
@@ -31,27 +24,9 @@ button.addEventListener('click', e => {
   displayCollection();
 });
 
-let currentcollection = null;
-
-for (let collection in collections) {
-  let button = document.body.appendChild(document.createElement('button'));
-  button.textContent = collection;
-  button.addEventListener('click', e => {
-    currentcollection = collection;
-    displayCollection();
-    for (let otherbutton of document.getElementsByTagName('button'))
-      otherbutton.disabled = false;
-    button.disabled = true;
-  });
-}
-
 let table = document.body.appendChild(document.createElement('table'));
-table.className = 'bycolumns';
 
 function displayCollection() {
-  if (!currentcollection)
-    return;
-  let groups = collections[currentcollection];
   table.textContent = '';
   let tr;
   if (table.className == 'bycolumns')
@@ -79,7 +54,6 @@ function displayCollection() {
       let img = td.appendChild(document.createElement('img'));
       img.src = images[i];
       img.addEventListener('click', e => {
-        console.log('img.click', img);
         if (mode != 0)
           return;
         mode = 1;
@@ -88,7 +62,6 @@ function displayCollection() {
       });
     }
     td.addEventListener('click', e => {
-      console.log('td.click', td);
       if (mode != 1)
         return;
       mode = 0;
@@ -106,6 +79,8 @@ function displayCollection() {
     });
   }
 }
+
+button.click();
 </script>
 
 <style>
