@@ -2,6 +2,7 @@ import {FileManager} from './filemanager.js';
 
 
 let filemanager = await FileManager.build();
+let grouplist = Object.keys(filemanager.groups);
 
 let button = document.body.appendChild(document.createElement('button'));
 button.textContent = 'Show rows';
@@ -19,7 +20,9 @@ button.addEventListener('click', e => {
 button = document.body.appendChild(document.createElement('button'));
 button.textContent = 'New group';
 button.addEventListener('click', e => {
-  filemanager.groups[`Group ${Object.entries(filemanager.groups).length}`] = [];
+  let groupname = `Group ${Object.entries(filemanager.groups).length}`;
+  filemanager.groups[groupname] = [];
+  grouplist.unshift(groupname);
   displayCollection();
 });
 
@@ -32,14 +35,38 @@ function displayCollection() {
   if (table.className == 'bycolumns')
     tr = table.appendChild(document.createElement('tr'));
   let selected = null;
-  for (let [groupname, images] of Object.entries(filemanager.groups)) {
+  for (let i = 0; i < grouplist.length; i++) {
+    let groupname = grouplist[i];
+    let images = filemanager.groups[groupname];
     if (table.className == 'byrows')
       tr = table.appendChild(document.createElement('tr'));
     let td = tr.appendChild(document.createElement('td'));
+
+    let button = td.appendChild(document.createElement('button'));
+    button.textContent = `Move ${table.className == 'byrows' ? 'up' : 'left'}`;
+    if (i == 0)
+      button.disabled = true;
+    button.addEventListener('click', e => {
+      grouplist.splice(i, 1);
+      grouplist.splice(i - 1, 0, groupname);
+      displayCollection();
+    });
+
+    button = td.appendChild(document.createElement('button'));
+    button.textContent = `Move ${table.className == 'byrows' ? 'down' : 'right'}`;
+    if (i == grouplist.length - 1)
+      button.disabled = true;
+    button.addEventListener('click', e => {
+      grouplist.splice(i, 1);
+      grouplist.splice(i + 1, 0, groupname);
+      displayCollection();
+    });
+
     let groupnameinput = td.appendChild(document.createElement('input'));
     groupnameinput.value = groupname;
     groupnameinput.disabled = true;  // TODO: Allow users to rename groups.
     td.appendChild(document.createElement('br'));
+
     for (let i = 0; i < 30; i++) {
       if (i >= images.length)
         break;
@@ -52,6 +79,7 @@ function displayCollection() {
         e.stopPropagation();
       });
     }
+
     td.addEventListener('click', e => {
       if (!selected)
         return;
