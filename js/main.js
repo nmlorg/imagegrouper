@@ -53,16 +53,9 @@ function displayCollection() {
     td.addEventListener('click', e => {
       if (!selected)
         return;
-      let [group, fname] = selected;
+      let [group, file] = selected;
       selected = null;
-      //fetch('...') -- move selected to td.title on server
-
-      let source = filemanager.groups[group];
-      let i = source.indexOf(fname);
-      source.splice(i, 1);
-
-      let target = filemanager.groups[td.title];
-      target.unshift(fname);
+      file.move(td.title);
 
       displayCollection();
     });
