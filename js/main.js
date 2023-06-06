@@ -25,7 +25,7 @@ function displayCollection() {
   let selected = null;
   let entries = Object.entries(filemanager.groups);
   let foundempty = false;
-  for (let [group, images] of entries)
+  for (let [groupname, images] of entries)
     if (images.length == 0) {
       foundempty = true;
       break;
@@ -33,11 +33,14 @@ function displayCollection() {
   if (!foundempty)
     filemanager.groups[`Group ${entries.length}`] = [];
   entries = Object.entries(filemanager.groups);
-  for (let [group, images] of entries) {
+  for (let [groupname, images] of entries) {
     if (table.className == 'byrows')
       tr = table.appendChild(document.createElement('tr'));
     let td = tr.appendChild(document.createElement('td'));
-    td.title = group;
+    let groupnameinput = td.appendChild(document.createElement('input'));
+    groupnameinput.value = groupname;
+    groupnameinput.disabled = true;  // TODO: Allow users to rename groups.
+    td.appendChild(document.createElement('br'));
     for (let i = 0; i < 30; i++) {
       if (i >= images.length)
         break;
@@ -46,16 +49,16 @@ function displayCollection() {
       img.addEventListener('click', e => {
         if (selected)
           return;
-        selected = [group, images[i]];
+        selected = [groupname, images[i]];
         e.stopPropagation();
       });
     }
     td.addEventListener('click', e => {
       if (!selected)
         return;
-      let [group, file] = selected;
+      let [groupname, file] = selected;
       selected = null;
-      file.move(td.title);
+      file.move(groupnameinput.value);
 
       displayCollection();
     });
