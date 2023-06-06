@@ -4,18 +4,27 @@ import {FileManager} from './filemanager.js';
 let filemanager = await FileManager.build();
 
 let button = document.body.appendChild(document.createElement('button'));
+button.textContent = 'Show rows';
 button.addEventListener('click', e => {
   if (table.className == 'bycolumns') {
     table.className = 'byrows';
-    button.textContent = 'Show columns';
+    e.target.textContent = 'Show columns';
   } else {
     table.className = 'bycolumns';
-    button.textContent = 'Show rows';
+    e.target.textContent = 'Show rows';
   }
   displayCollection();
 });
 
+button = document.body.appendChild(document.createElement('button'));
+button.textContent = 'New group';
+button.addEventListener('click', e => {
+  filemanager.groups[`Group ${Object.entries(filemanager.groups).length}`] = [];
+  displayCollection();
+});
+
 let table = document.body.appendChild(document.createElement('table'));
+table.className = 'bycolumns';
 
 function displayCollection() {
   table.textContent = '';
@@ -23,17 +32,7 @@ function displayCollection() {
   if (table.className == 'bycolumns')
     tr = table.appendChild(document.createElement('tr'));
   let selected = null;
-  let entries = Object.entries(filemanager.groups);
-  let foundempty = false;
-  for (let [groupname, images] of entries)
-    if (images.length == 0) {
-      foundempty = true;
-      break;
-    }
-  if (!foundempty)
-    filemanager.groups[`Group ${entries.length}`] = [];
-  entries = Object.entries(filemanager.groups);
-  for (let [groupname, images] of entries) {
+  for (let [groupname, images] of Object.entries(filemanager.groups)) {
     if (table.className == 'byrows')
       tr = table.appendChild(document.createElement('tr'));
     let td = tr.appendChild(document.createElement('td'));
@@ -65,4 +64,4 @@ function displayCollection() {
   }
 }
 
-button.click();
+displayCollection();
