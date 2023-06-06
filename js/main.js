@@ -4,20 +4,19 @@ import {FileManager} from './filemanager.js';
 let filemanager = await FileManager.build();
 let grouplist = Object.keys(filemanager.groups);
 
-let button = document.body.appendChild(document.createElement('button'));
-button.textContent = 'Show rows';
-button.addEventListener('click', e => {
-  if (table.className == 'bycolumns') {
-    table.className = 'byrows';
-    e.target.textContent = 'Show columns';
-  } else {
-    table.className = 'bycolumns';
-    e.target.textContent = 'Show rows';
-  }
+let select = document.body.appendChild(document.createElement('select'));
+let option = select.appendChild(document.createElement('option'));
+option.value = 'bycolumns';
+option.textContent = 'Columns';
+option = select.appendChild(document.createElement('option'));
+option.value = 'byrows';
+option.textContent = 'Rows';
+select.addEventListener('change', e => {
+  table.className = select.value;
   displayCollection();
 });
 
-button = document.body.appendChild(document.createElement('button'));
+let button = document.body.appendChild(document.createElement('button'));
 button.textContent = 'New group';
 button.addEventListener('click', e => {
   let groupname = `Group ${Object.entries(filemanager.groups).length}`;
