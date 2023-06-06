@@ -22,8 +22,7 @@ function displayCollection() {
   let tr;
   if (table.className == 'bycolumns')
     tr = table.appendChild(document.createElement('tr'));
-  let mode = 0;
-  let selected;
+  let selected = null;
   let entries = Object.entries(filemanager.groups);
   let foundempty = false;
   for (let [group, images] of entries)
@@ -45,18 +44,17 @@ function displayCollection() {
       let img = td.appendChild(document.createElement('img'));
       img.src = images[i].path;
       img.addEventListener('click', e => {
-        if (mode != 0)
+        if (selected)
           return;
-        mode = 1;
         selected = [group, images[i]];
         e.stopPropagation();
       });
     }
     td.addEventListener('click', e => {
-      if (mode != 1)
+      if (!selected)
         return;
-      mode = 0;
       let [group, fname] = selected;
+      selected = null;
       //fetch('...') -- move selected to td.title on server
 
       let source = filemanager.groups[group];
