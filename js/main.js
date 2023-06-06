@@ -1,13 +1,7 @@
-let files = await fetch('/files').then(r => r.json());
-let groups = {};
-for (let path of files) {  // path = 'path/to/filename.jpg'
-  let parts = path.split('/');  // parts = ['path', 'to', 'filename.jpg']
-  parts.pop();  // parts = ['path', 'to']
-  let group = parts.join('/');  // group = 'path/to'
-  if (!groups[group])
-    groups[group] = [];
-  groups[group].push(path);
-}
+import {FileManager} from './filemanager.js';
+
+
+let filemanager = await FileManager.build();
 
 let button = document.body.appendChild(document.createElement('button'));
 button.addEventListener('click', e => {
@@ -30,7 +24,7 @@ function displayCollection() {
     tr = table.appendChild(document.createElement('tr'));
   let mode = 0;
   let selected;
-  let entries = Object.entries(groups);
+  let entries = Object.entries(filemanager.groups);
   let foundempty = false;
   for (let [group, images] of entries)
     if (images.length == 0) {
@@ -38,8 +32,8 @@ function displayCollection() {
       break;
     }
   if (!foundempty)
-    groups[`Group ${entries.length}`] = [];
-  entries = Object.entries(groups);
+    filemanager.groups[`Group ${entries.length}`] = [];
+  entries = Object.entries(filemanager.groups);
   for (let [group, images] of entries) {
     if (table.className == 'byrows')
       tr = table.appendChild(document.createElement('tr'));
@@ -49,7 +43,7 @@ function displayCollection() {
       if (i >= images.length)
         break;
       let img = td.appendChild(document.createElement('img'));
-      img.src = images[i];
+      img.src = images[i].path;
       img.addEventListener('click', e => {
         if (mode != 0)
           return;
@@ -65,11 +59,11 @@ function displayCollection() {
       let [group, fname] = selected;
       //fetch('...') -- move selected to td.title on server
 
-      let source = groups[group];
+      let source = filemanager.groups[group];
       let i = source.indexOf(fname);
       source.splice(i, 1);
 
-      let target = groups[td.title];
+      let target = filemanager.groups[td.title];
       target.unshift(fname);
 
       displayCollection();
