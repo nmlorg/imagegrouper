@@ -25,6 +25,36 @@ button.addEventListener('click', e => {
   displayCollection();
 });
 
+let imagedim = 15;
+
+button = document.body.appendChild(document.createElement('button'));
+button.textContent = 'Smaller';
+button.addEventListener('click', e => {
+  if (imagedim > 1)
+    imagedim--;
+  else
+    imagedim /= 2;
+  document.documentElement.style.setProperty('--imagedim', `${imagedim}vw`);
+});
+
+button = document.body.appendChild(document.createElement('button'));
+button.textContent = 'Reset size';
+button.addEventListener('click', e => {
+  imagedim = 15;
+  document.documentElement.style.setProperty('--imagedim', `${imagedim}vw`);
+});
+
+button = document.body.appendChild(document.createElement('button'));
+button.textContent = 'Bigger';
+button.addEventListener('click', e => {
+  if (imagedim < 1)
+    imagedim *= 2;
+  else
+    imagedim++;
+  document.documentElement.style.setProperty('--imagedim', `${imagedim}vw`);
+});
+
+
 let table = document.body.appendChild(document.createElement('table'));
 table.className = 'bycolumns';
 

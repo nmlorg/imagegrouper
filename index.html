@@ -3,28 +3,28 @@
 <script type="module" src="js/main.js"></script>
 
 <style>
-table.bycolumns {
-  table-layout: fixed;
-  width: 100%;
+:root {
+  --imagedim: 15vw;
 }
 
 table.bycolumns td {
   border: 1px solid black;
   vertical-align: top;
+  width: var(--imagedim);
 }
 
 table.bycolumns img {
-  max-width: 50%;
+  width: var(--imagedim);
 }
 
 table.byrows td {
   border: 1px solid black;
-  height: 20vh;
+  height: calc(2 * var(--imagedim) / 3);
   vertical-align: top;
   white-space: nowrap;
 }
 
 table.byrows img {
-  height: 20vh;
+  height: calc(2 * var(--imagedim) / 3);
 }
 </style>
