@@ -36,7 +36,7 @@ function displayCollection() {
   let selected = null;
   for (let i = 0; i < grouplist.length; i++) {
     let groupname = grouplist[i];
-    let images = filemanager.groups[groupname];
+    let files = filemanager.groups[groupname];
     if (table.className == 'byrows')
       tr = table.appendChild(document.createElement('tr'));
     let td = tr.appendChild(document.createElement('td'));
@@ -66,15 +66,14 @@ function displayCollection() {
     groupnameinput.disabled = true;  // TODO: Allow users to rename groups.
     td.appendChild(document.createElement('br'));
 
-    for (let i = 0; i < 30; i++) {
-      if (i >= images.length)
-        break;
+    for (let i = 0; i < Math.min(files.length, 30); i++) {
+      let file = files[i];
       let img = td.appendChild(document.createElement('img'));
-      img.src = images[i].path;
+      img.src = file.path;
       img.addEventListener('click', e => {
         if (selected)
           return;
-        selected = [groupname, images[i]];
+        selected = [groupname, file];
         e.stopPropagation();
       });
     }
