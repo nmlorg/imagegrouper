@@ -13,7 +13,6 @@ option.value = 'byrows';
 option.textContent = 'Rows';
 select.addEventListener('change', e => {
   container.className = select.value;
-  displayCollection();
 });
 
 let button = document.body.appendChild(document.createElement('button'));
@@ -67,7 +66,7 @@ function displayCollection() {
     let div = container.appendChild(document.createElement('div'));
 
     let button = div.appendChild(document.createElement('button'));
-    button.textContent = `Move ${container.className == 'byrows' ? 'up' : 'left'}`;
+    button.textContent = '\u21d6';  // Up/left double arrow.
     if (i == 0)
       button.disabled = true;
     button.addEventListener('click', e => {
@@ -77,7 +76,7 @@ function displayCollection() {
     });
 
     button = div.appendChild(document.createElement('button'));
-    button.textContent = `Move ${container.className == 'byrows' ? 'down' : 'right'}`;
+    button.textContent = '\u21d8';  // Down/right double arrow.
     if (i == grouplist.length - 1)
       button.disabled = true;
     button.addEventListener('click', e => {
