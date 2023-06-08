@@ -12,7 +12,7 @@ option = select.appendChild(document.createElement('option'));
 option.value = 'byrows';
 option.textContent = 'Rows';
 select.addEventListener('change', e => {
-  table.className = select.value;
+  container.className = select.value;
   displayCollection();
 });
 
@@ -55,24 +55,19 @@ button.addEventListener('click', e => {
 });
 
 
-let table = document.body.appendChild(document.createElement('table'));
-table.className = 'bycolumns';
+let container = document.body.appendChild(document.createElement('div'));
+container.className = 'bycolumns';
 
 function displayCollection() {
-  table.textContent = '';
-  let tr;
-  if (table.className == 'bycolumns')
-    tr = table.appendChild(document.createElement('tr'));
+  container.textContent = '';
   let selected = null;
   for (let i = 0; i < grouplist.length; i++) {
     let groupname = grouplist[i];
     let files = filemanager.groups[groupname];
-    if (table.className == 'byrows')
-      tr = table.appendChild(document.createElement('tr'));
-    let td = tr.appendChild(document.createElement('td'));
+    let div = container.appendChild(document.createElement('div'));
 
-    let button = td.appendChild(document.createElement('button'));
-    button.textContent = `Move ${table.className == 'byrows' ? 'up' : 'left'}`;
+    let button = div.appendChild(document.createElement('button'));
+    button.textContent = `Move ${container.className == 'byrows' ? 'up' : 'left'}`;
     if (i == 0)
       button.disabled = true;
     button.addEventListener('click', e => {
@@ -81,8 +76,8 @@ function displayCollection() {
       displayCollection();
     });
 
-    button = td.appendChild(document.createElement('button'));
-    button.textContent = `Move ${table.className == 'byrows' ? 'down' : 'right'}`;
+    button = div.appendChild(document.createElement('button'));
+    button.textContent = `Move ${container.className == 'byrows' ? 'down' : 'right'}`;
     if (i == grouplist.length - 1)
       button.disabled = true;
     button.addEventListener('click', e => {
@@ -91,14 +86,14 @@ function displayCollection() {
       displayCollection();
     });
 
-    let groupnameinput = td.appendChild(document.createElement('input'));
+    let groupnameinput = div.appendChild(document.createElement('input'));
     groupnameinput.value = groupname;
     groupnameinput.disabled = true;  // TODO: Allow users to rename groups.
-    td.appendChild(document.createElement('br'));
+    div.appendChild(document.createElement('br'));
 
     for (let i = 0; i < Math.min(files.length, 30); i++) {
       let file = files[i];
-      let img = td.appendChild(document.createElement('img'));
+      let img = div.appendChild(document.createElement('img'));
       img.src = file.path;
       img.addEventListener('click', e => {
         if (selected)
@@ -109,7 +104,7 @@ function displayCollection() {
       });
     }
 
-    td.addEventListener('click', e => {
+    div.addEventListener('click', e => {
       if (!selected)
         return;
       let [groupname, file] = selected;

@@ -7,24 +7,31 @@
   --imagedim: 15vw;
 }
 
-table.bycolumns td {
-  border: 1px solid black;
-  vertical-align: top;
-  width: var(--imagedim);
-}
-
-table.bycolumns img {
-  width: var(--imagedim);
-}
-
-table.byrows td {
-  border: 1px solid black;
-  height: calc(2 * var(--imagedim) / 3);
-  vertical-align: top;
+div.bycolumns {
   white-space: nowrap;
 }
 
-table.byrows img {
+div.bycolumns div {
+  border: 1px solid black;
+  display: inline-block;
+  height: 90vh;
+  overflow-y: scroll;
+  min-width: var(--imagedim);
+}
+
+div.bycolumns img {
+  display: block;
+  width: var(--imagedim);
+}
+
+div.byrows div {
+  border: 1px solid black;
+  min-height: calc(2 * var(--imagedim) / 3);
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
+div.byrows img {
   height: calc(2 * var(--imagedim) / 3);
 }
 
