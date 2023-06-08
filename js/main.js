@@ -104,6 +104,7 @@ function displayCollection() {
         if (selected)
           return;
         selected = [groupname, file];
+        img.className = 'selected';  // This image instance is destroyed, so we don't need to clear this.
         e.stopPropagation();
       });
     }
