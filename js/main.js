@@ -60,29 +60,33 @@ container.className = 'bycolumns';
 function displayCollection() {
   container.textContent = '';
   let selected = null;
-  for (let i = 0; i < grouplist.length; i++) {
-    let groupname = grouplist[i];
+  for (let groupname of grouplist) {
     let files = filemanager.groups[groupname];
     let div = container.appendChild(document.createElement('div'));
 
-    let button = div.appendChild(document.createElement('button'));
-    button.textContent = '\u21d6';  // Up/left double arrow.
-    if (i == 0)
-      button.disabled = true;
-    button.addEventListener('click', e => {
-      grouplist.splice(i, 1);
-      grouplist.splice(i - 1, 0, groupname);
-      displayCollection();
+    div.upleft = div.appendChild(document.createElement('button'));
+    div.upleft.textContent = '\u21d6';  // Up/left double arrow.
+    if (!div.previousElementSibling)
+      div.upleft.disabled = true;
+    div.upleft.addEventListener('click', e => {
+      div.parentNode.firstElementChild.upleft.disabled = false;
+      div.parentNode.lastElementChild.downright.disabled = false;
+      div.parentNode.insertBefore(div, div.previousElementSibling);
+      div.parentNode.firstElementChild.upleft.disabled = true;
+      div.parentNode.lastElementChild.downright.disabled = true;
     });
 
-    button = div.appendChild(document.createElement('button'));
-    button.textContent = '\u21d8';  // Down/right double arrow.
-    if (i == grouplist.length - 1)
-      button.disabled = true;
-    button.addEventListener('click', e => {
-      grouplist.splice(i, 1);
-      grouplist.splice(i + 1, 0, groupname);
-      displayCollection();
+    div.downright = div.appendChild(document.createElement('button'));
+    div.downright.textContent = '\u21d8';  // Down/right double arrow.
+    div.downright.disabled = true;
+    if (div.previousElementSibling)
+      div.previousElementSibling.downright.disabled = false;
+    div.downright.addEventListener('click', e => {
+      div.parentNode.firstElementChild.upleft.disabled = false;
+      div.parentNode.lastElementChild.downright.disabled = false;
+      div.parentNode.insertBefore(div, div.nextElementSibling.nextElementSibling);
+      div.parentNode.firstElementChild.upleft.disabled = true;
+      div.parentNode.lastElementChild.downright.disabled = true;
     });
 
     let groupnameinput = div.appendChild(document.createElement('input'));
