@@ -92,7 +92,7 @@ function addCollection(groupname) {
 
   let imagesdiv = div.appendChild(document.createElement('div'));
 
-  for (let i = 0; i < Math.min(files.length, 30); i++) {
+  for (let i = 0; i < files.length; i++) {
     let file = files[i];
     let img = imagesdiv.appendChild(document.createElement('img'));
     img.src = file.path;
