@@ -11,9 +11,12 @@ div.bycolumns {
   white-space: nowrap;
 }
 
-div.bycolumns div {
+div.bycolumns > div {
   border: 1px solid black;
   display: inline-block;
+}
+
+div.bycolumns > div > div {
   height: 90vh;
   overflow-y: scroll;
   min-width: var(--imagedim);
@@ -24,8 +27,11 @@ div.bycolumns img {
   width: var(--imagedim);
 }
 
-div.byrows div {
+div.byrows > div {
   border: 1px solid black;
+}
+
+div.byrows > div > div {
   min-height: calc(2 * var(--imagedim) / 3);
   overflow-x: scroll;
   white-space: nowrap;

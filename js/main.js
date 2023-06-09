@@ -92,29 +92,30 @@ function displayCollection() {
     let groupnameinput = div.appendChild(document.createElement('input'));
     groupnameinput.value = groupname;
     groupnameinput.disabled = true;  // TODO: Allow users to rename groups.
-    div.appendChild(document.createElement('br'));
+
+    let imagesdiv = div.appendChild(document.createElement('div'));
 
     for (let i = 0; i < Math.min(files.length, 30); i++) {
       let file = files[i];
-      let img = div.appendChild(document.createElement('img'));
+      let img = imagesdiv.appendChild(document.createElement('img'));
       img.src = file.path;
       img.addEventListener('click', e => {
         if (selected)
           return;
-        selected = [groupname, file];
-        img.className = 'selected';  // This image instance is destroyed, so we don't need to clear this.
+        selected = [groupname, file, img];
+        img.className = 'selected';
         e.stopPropagation();
       });
     }
 
-    div.addEventListener('click', e => {
+    imagesdiv.addEventListener('click', e => {
       if (!selected)
         return;
-      let [groupname, file] = selected;
+      let [groupname, file, img] = selected;
       selected = null;
       file.move(groupnameinput.value);
-
-      displayCollection();
+      imagesdiv.insertBefore(img, imagesdiv.firstElementChild);
+      img.className = '';
     });
   }
 }
