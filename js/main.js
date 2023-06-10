@@ -63,8 +63,9 @@ function addCollection(groupname) {
 
   div.upleft = div.appendChild(document.createElement('button'));
   div.upleft.textContent = '\u21d6';  // Up/left double arrow.
-  if (!div.previousElementSibling)
-    div.upleft.disabled = true;
+  div.upleft.disabled = true;
+  if (div.nextElementSibling)
+    div.nextElementSibling.upleft.disabled = false;
   div.upleft.addEventListener('click', e => {
     div.parentNode.firstElementChild.upleft.disabled = false;
     div.parentNode.lastElementChild.downright.disabled = false;
@@ -75,9 +76,8 @@ function addCollection(groupname) {
 
   div.downright = div.appendChild(document.createElement('button'));
   div.downright.textContent = '\u21d8';  // Down/right double arrow.
-  div.downright.disabled = true;
-  if (div.previousElementSibling)
-    div.previousElementSibling.downright.disabled = false;
+  if (!div.nextElementSibling)
+    div.downright.disabled = true;
   div.downright.addEventListener('click', e => {
     div.parentNode.firstElementChild.upleft.disabled = false;
     div.parentNode.lastElementChild.downright.disabled = false;
