@@ -55,6 +55,16 @@ button.addEventListener('click', e => {
 let container = document.body.appendChild(document.createElement('div'));
 container.className = 'bycolumns';
 
+// https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
+let observer = new IntersectionObserver(entries => {
+  for (let entry of entries) {
+    if (entry.isIntersecting && entry.target.dataset.src) {
+      entry.target.src = entry.target.dataset.src;
+      delete entry.target.dataset.src;
+      observer.unobserve(entry.target);
+    }
+  }
+});
 let selected = null;
 
 function addCollection(groupname) {
@@ -95,7 +105,11 @@ function addCollection(groupname) {
   for (let i = 0; i < files.length; i++) {
     let file = files[i];
     let img = imagesdiv.appendChild(document.createElement('img'));
-    img.src = file.path;
+    img.src = files[0].path;
+    if (i > 0) {
+      img.dataset.src = file.path;
+      observer.observe(img);
+    }
     img.addEventListener('click', e => {
       if (selected)
         return;
